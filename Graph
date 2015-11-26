@@ -1,0 +1,121 @@
+Enter file contents herepackage adt;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.graphstream.graph.Edge;
+import org.graphstream.graph.implementations.SingleGraph;
+
+public class GraphImplementation {
+
+	ArrayList<Node> G = new ArrayList<Node>();
+
+
+	public class Node{
+		
+		int node;
+		ArrayList<Node> adjacencyList=new ArrayList<GraphImplementation.Node>();
+		public Node(int node) {
+			this.node = node;
+		}
+		
+		
+	}
+	
+	public void addVertex(int v){
+		G.add(new Node(v));
+	}
+	public void addEdge(int v, int w){
+		for (int i = 0; i < G.size(); i++) {
+			int name = G.get(i).node;
+			if (name==v) {
+				for (int j = 0; j < G.size(); j++) {
+					int adjacencyListElement =G.get(j).node;
+					if (adjacencyListElement==w) {
+						G.get(i).adjacencyList.add(G.get(j));	
+						break;
+					}
+				}
+			}
+		}
+	}
+	
+	
+	public int[] adjacencyList(int v){
+		int[] c=null;
+		for (int i = 0; i < G.size(); i++) {
+			if (G.get(i).node==v) {
+				c = new int[G.get(i).adjacencyList.size()];
+				for (int j = 0; j <G.get(i).adjacencyList.size(); j++) {
+					c[j]=G.get(i).adjacencyList.get(j).node;
+				}
+			}
+		}
+		return c;
+	}
+	
+	public void showGraph(){
+		SingleGraph graph = new SingleGraph("figure");
+        graph.setStrict(false);
+        graph.setAutoCreate(true);
+        graph.display();
+        for(int i=0;i<G.size();i++)
+    		graph.addNode(((Integer)G.get(i).node).toString());
+        for (int i = 0; i < G.size(); i++) {
+			for(int j=0;j<G.get(i).adjacencyList.size();j++){
+				graph.addEdge(Integer.toString(G.get(i).node)+"-"+Integer.toString(G.get(i).adjacencyList.get(j).node),Integer.toString(G.get(i).node),Integer.toString(G.get(i).adjacencyList.get(j).node), true);
+			}
+        }
+		for (org.graphstream.graph.Node node : graph)
+            node.addAttribute("ui.label",node.getId());
+        Iterator<? extends Edge> k = graph.getEdgeIterator();
+        while(k.hasNext()){
+        	Edge e = k.next();
+        	e.addAttribute("ui.label", e.getId());
+        }
+        String styleSheet =
+    	        "node {" +
+    	        "   fill-color: black;" +
+    	        	"text-size:20;"+
+    	        "text-style:bold;"+
+    	        "text-alignment:under;"+
+    	        "	"+
+    	        "}"+
+    	        "edge {"+
+		        "   text-size:15;"+
+    	        "fill-color: red;"+
+    	        "text-style:bold;"+
+		        "text-alignment:along;"+
+		        "}";
+        graph.addAttribute("ui.stylesheet",styleSheet);        
+	}
+	
+	public static void main(String[] args) {
+		
+		
+		GraphImplementation graph = new GraphImplementation();
+		
+		graph.addVertex(1);
+		graph.addVertex(2);
+		graph.addVertex(3);
+		graph.addVertex(4);
+		
+		graph.addEdge(1, 2);
+		graph.addEdge(2,3);
+		graph.addEdge(2,4);
+		graph.addEdge(3, 1);
+		
+		
+		System.out.println("Adjacency list of 1 ->" + Arrays.toString(graph.adjacencyList(1)));
+		System.out.println("Adjacency list of 2 ->" + Arrays.toString(graph.adjacencyList(2)));
+		System.out.println("Adjacency list of 3 ->" + Arrays.toString(graph.adjacencyList(3)));
+		System.out.println("Adjacency list of 4 ->" + Arrays.toString(graph.adjacencyList(4)));
+		graph.showGraph();
+		
+		
+		
+		
+	}
+	
+}
