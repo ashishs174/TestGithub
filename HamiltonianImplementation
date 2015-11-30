@@ -1,0 +1,118 @@
+import java.util.ArrayList;
+
+
+public class MyHamiltonianImplementation {
+
+	private int arr[];
+	private String colorArray[];
+	ArrayList<Node> g = new ArrayList<MyHamiltonianImplementation.Node>();
+	
+	public MyHamiltonianImplementation() {
+		//arr=new int[g.size()];
+		colorArray = new String[2];
+		colorArray[0]="Red";
+		colorArray[1]="Blue";
+	}
+
+	private class Node{
+		int v;
+		ArrayList<Node> adj;
+		String color;
+		public Node(int v) {
+			this.v=v;
+			adj=new ArrayList<Node>();
+		}
+	}
+	
+	
+	public void addVertex(int v){
+		Node node = new Node(v);
+		g.add(node);
+	}
+	public void addEdge(int v, int w){
+		for (int i = 0; i < g.size(); i++) {
+			if (g.get(i).v==v) {
+				for (int j = 0; j <g.size() ; j++) {
+					if (g.get(j).v==w) {
+						g.get(i).adj.add(g.get(j));
+					}		
+				}
+			}
+		}
+	}
+	
+	//coloring problem of the graph
+	public boolean mColor(int nodeIndex){
+		if (g.size()==nodeIndex) {
+			return true;
+		}
+		int colorIndex=0;
+		
+		for (int i = 0; i < g.get(nodeIndex).adj.size(); i++) {
+			if(mColorSafe(g.get(nodeIndex), colorArray[colorIndex])){
+				g.get(nodeIndex).color=colorArray[colorIndex];
+				mColor(nodeIndex+1);
+				//return true;
+			}
+			else {
+				colorIndex++;
+				if (colorIndex==colorArray.length) {
+					return false;
+				}
+			}
+		}
+		
+		for (int i = 0; i < g.size(); i++) {
+			if (g.get(i).color!=null) {
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean mColorSafe(Node a, String color){
+		for (int i = 0; i < a.adj.size(); i++) {
+			if (a.adj.get(i).color==color) {
+				return false;
+			}	
+		}
+		return true;		
+	}
+	
+	
+	//Hamiltonian Cycle
+	
+	public void printAdjacencyList(){
+		for (int i = 0; i < g.size(); i++) {
+			System.out.print(g.get(i).v +" -> [");
+			for (int j = 0; j < g.get(i).adj.size(); j++) {
+				//System.out.print(g.get(i).adj.get(j).v+" ");
+				System.out.print(g.get(i).adj.get(j).v+" color :"+ g.get(i).adj.get(j).color+" ,");
+			}
+			System.out.print("]");
+			System.out.println();
+		}
+	}
+	public static void main(String[] args) {
+		MyHamiltonianImplementation asdf = new MyHamiltonianImplementation();
+		asdf.addVertex(1);
+		asdf.addVertex(2);
+		asdf.addVertex(3);
+		asdf.addVertex(4);
+		asdf.addVertex(5);
+		asdf.addEdge(1, 2);
+		asdf.addEdge(2,1);
+		asdf.addEdge(1,3);
+		asdf.addEdge(3,1);
+		asdf.addEdge(2,4);
+		asdf.addEdge(4,2);
+		asdf.addEdge(3,4);
+		asdf.addEdge(4,3);
+		asdf.addEdge(4, 5);
+		asdf.addEdge(5,4);
+		asdf.addEdge(2,3);
+		asdf.addEdge(3,2);
+		System.out.println("is Output available "+asdf.mColor(0));
+		asdf.printAdjacencyList();
+	}
+	
+}
