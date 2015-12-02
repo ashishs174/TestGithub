@@ -1,0 +1,46 @@
+package Flipkart;
+
+import com.sun.org.apache.bcel.internal.generic.IREM;
+
+public class flipkartRobotObstacleProblem {
+
+	private int[][]maze;
+	private int n;
+	
+	public flipkartRobotObstacleProblem() {
+		
+		int[][] x = {{1,1,0},
+					{1,0,1},
+					{0,1,1}};
+		maze=x;
+		this.n=x.length;
+	}
+	int paths=0;
+	public void solution(int right, int down, String path){
+		path= path+ "(" + right+","+down+") ";
+		
+		if (right==n-1 && down ==n-1) {
+			System.out.println("["+path+"]");
+			paths++;
+			return;
+		}
+		if (maze[right][down]==0) {
+			return;
+		}
+		if (right==n-1 ) {
+			solution(right,down+1,path);
+		}
+		else if(down==n-1 ) {
+			solution(right+1, down, path);
+		}
+		else {
+			solution(right+1, down, path);
+			solution(right,down+1,path);
+		}
+	}
+	public static void main(String[] args) {
+		flipkartRobotObstacleProblem asdf = new flipkartRobotObstacleProblem();
+		//System.out.println(asdf.solution(0, 0,""));
+		System.out.println("Number of paths :" +asdf.paths);
+	}
+}
