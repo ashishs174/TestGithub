@@ -1,0 +1,109 @@
+package Flipkart;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
+
+public class TrieImplementation {
+
+	Trie root;
+	
+	private class Trie{
+	
+		char value;
+		ArrayList<Trie>x=new ArrayList<Trie>();
+
+	}
+	
+	public TrieImplementation() {
+		root=new Trie();
+		root.value=' ';
+	}
+	
+	public void addChar(String s){
+		if (s.length()==0) {
+			return;
+		}
+		char st[] = s.toCharArray();
+		addChar(root,st,0);
+	}
+	
+	private void addChar(Trie r,char[] y, int i){
+		
+		for (int j = 0; j < r.x.size(); j++) {
+			if (r.x.get(j).value==y[i]) {
+				addChar(r.x.get(j),y,i+1);
+				return;
+			}
+		}
+		for (int k = i; k < y.length; k++) {
+			Trie node = new Trie();
+			node.value=y[k];
+			r.x.add(node);
+			r=node;
+		}
+		return;
+	}
+	public void remove(String s){
+		if (s.length()==0) {
+			return;
+		}
+		else {
+			if (isMember(s)) {
+				char[] st=s.toCharArray();
+				remove(root,st,0);
+			}
+		}
+	}
+	private void remove(Trie r,char[]y,int i){
+		if (i==y.length) {
+			return ;
+		}
+		else {
+			for (int j = 0; j < r.x.size(); j++) {
+				if (r.x.get(j).value==y[i])
+				{
+					if (r.x.get(j).x.size()==1 || r.x.get(j).x.size()==0) {
+						r.x.remove(j);
+						return;
+					}
+					remove(r.x.get(j),y,i+1);
+				}
+			}
+		}
+	}
+	public boolean isMember(String s){
+		if (s.length()==0) {
+			return false;
+		}
+		char st[] = s.toCharArray();
+		if (isMember(root,st,0)){
+			return true;	
+		}
+		else
+			return false;
+	}
+	private boolean isMember(Trie r, char[] y, int i){
+		if (i==y.length) {
+			return true;
+		}
+		for (int j = 0; j < r.x.size(); j++) {
+			if (r.x.get(j).value==y[i]) {
+				return isMember(r.x.get(j),y,i+1);
+			}
+		}
+		return false;
+	}
+	
+	public static void main(String[] args) {
+		TrieImplementation sdf = new TrieImplementation();
+		
+		sdf.addChar("amy");
+		sdf.addChar("ann");
+		sdf.addChar("emma");
+		sdf.remove("ann");
+		
+		System.out.println("The memeber Exists :" + sdf.isMember("amy"));
+	}
+}
