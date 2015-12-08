@@ -1,0 +1,62 @@
+package Flipkart;
+
+public class StockProblem {
+
+	private int stockA[];
+	private int n;
+	private Interval sol[];
+	
+	private class Interval{
+		int buy;
+		int sell;
+		
+		public Interval() {
+			
+		}
+		public Interval(int b, int s) {
+			this.buy = b;
+			this.sell = s;
+		}
+	}
+	
+	public StockProblem(int a[]) {
+		this.stockA=a;
+		this.n = a.length;
+		sol = new Interval[n/2+1];
+	}
+	public void solution(){
+		
+		if (n==1) {
+			return;
+		}
+		int i =0;
+		int count =0;
+		
+		while(i<n-1){
+			sol[count]=new Interval();
+			while(i<n-1 && stockA[i]>=stockA[i+1])
+				i++;
+			if (i==n-1) {
+				return;
+			}
+			sol[count].buy=i++;
+			
+			while(i<n && stockA[i]>=stockA[i-1])
+				i++;
+			sol[count].sell=i-1;
+			count++;
+		}
+	}
+
+	public static void main(String[] args) {
+		int a[] = {100,190,260,301,40,535,695};
+		StockProblem sdf= new StockProblem(a);
+		sdf.solution();
+		for (int i = 0; i < sdf.sol.length; i++) {
+			if(sdf.sol[i]!=null){
+			System.out.println("Buy on the day :"+ sdf.sol[i].buy +"\nSell on the day :"+sdf.sol[i].sell);
+			}
+		}
+		
+	}
+}
