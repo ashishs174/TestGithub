@@ -1,0 +1,99 @@
+package DisjointSet;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class DisjointSet {
+
+	private Map<Long,Node> map = new HashMap<>();
+	
+	private class Node{
+		long data;
+		Node parent;
+		int rank;
+	}
+	
+	
+	/*private class myMap<> extends Map{
+		
+	}*/
+	/*private class myMap<Long,Node> extends HashMap<Long,Node>{
+		private Node get(long data){
+			for (int i = 0; i< map.size(); i++) {
+				if(Map<K, V>)
+			}
+		}
+	}*/
+	public void makeSet(long data){
+		
+		Node node = new Node();
+		node.data = data;
+		node.parent=node;
+		node.rank=0;
+		map.put(data,node);
+	}
+	
+	public void union(int data1, int data2){
+		Map newTestMap  = new HashMap<>();
+		
+		Node parent1=map.get(data1);
+		Node parent2 = map.get(data2);
+		Node nodeParent1 = findSet(parent1);
+		Node nodeParent2 = findSet(map.get(parent2));
+		
+		if(nodeParent1.data==nodeParent2.data)return;
+		
+		if (nodeParent1.rank >=	nodeParent2.rank) {
+			nodeParent2.parent = nodeParent1;
+			nodeParent1.rank = (nodeParent2.rank == nodeParent1.rank) ? nodeParent1.rank +1:nodeParent2.rank;
+		}
+		else {
+			nodeParent1.parent=nodeParent2;
+		}
+	}
+	
+	public long findSet(long data){
+		return findSet(map.get(data)).data;
+	}
+
+	public Node findSet(Node node){
+		Node parent = node;
+		
+		if (node==node.parent) {
+			return parent;
+		}
+		
+		node.parent=findSet(node);
+		
+		return node.parent;
+	}
+	
+	public static void main(String[] args) {
+
+		DisjointSet sdf  = new DisjointSet();
+		
+		sdf.makeSet(1);
+		sdf.makeSet(2);
+		sdf.makeSet(3);
+		sdf.makeSet(4);
+		sdf.makeSet(5);
+		sdf.makeSet(6);
+		sdf.makeSet(7);
+	
+		sdf.union(1,2);
+		sdf.union(2,3);
+		sdf.union(4,5);
+		sdf.union(6,7);
+		sdf.union(5,6);
+		sdf.union(3,7);
+		
+		System.out.println(sdf.findSet(sdf.map.get(1)));
+		System.out.println(sdf.findSet(sdf.map.get(2)));
+		System.out.println(sdf.findSet(sdf.map.get(3)));
+		System.out.println(sdf.findSet(sdf.map.get(4)));
+		System.out.println(sdf.findSet(sdf.map.get(5)));
+		System.out.println(sdf.findSet(sdf.map.get(6)));
+		System.out.println(sdf.findSet(sdf.map.get(7)));
+	}
+}
+
